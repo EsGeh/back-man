@@ -1,12 +1,12 @@
 pkgname=back-man
 pkgver=0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Experimental utility for managing backup tasks based on config files"
 arch=("any")
 url="https://github.com/EsGeh/"
 license=('GPL')
 depends=( \
-	'copy-tools=0.4' \
+	'copy-tools=0.4.1' \
 )
 source=( 'back-man.fish' '__back_man.conf.def')
 sha1sums=('SKIP' 'SKIP')
