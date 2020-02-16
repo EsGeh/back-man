@@ -21,6 +21,19 @@ So far only tested on Arch Linux.
 
 ## Installation
 
+### On arch linux: install using pacman
+
+- clone the repository
+- create package for pacman:
+
+		$ makepkg
+
+- install it:
+
+		$ makepkg -i
+
+### Install manually
+
 You are on your own.
 
 ## Usage Example
