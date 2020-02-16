@@ -235,17 +235,45 @@ function cmd_run
 
 	# set copy_opts from config or flags
 	for k in $copy_opts_descr
-		set key (string match --regex './(.*)=' $k)[2]
+		# handle accumulative option:
+		set key (string match --regex './(.*)=\+' $k)[2]
 		and begin
 			set -l flag_name (string join '' '_flag_' "$key")
-			set -l config_key (string replace '-' '_' $key)
+			set -l flag_name (string replace -- '-' '_' (string join -- '' '_flag_' "$key"))
+			set -l config_key (string replace '-' '_' "$key")
+			if contains "$config_key" (yq -re 'keys[]' "$config_file")
+				if test (yq -re ".$config_key|type" "$config_file") = "string"
+					set value (yq -re ".$config_key"'' "$config_file")
+				else if test (yq -re ".$config_key|type" "$config_file") = "array"
+					set value (yq -re ".$config_key"'[]' "$config_file")
+				else
+					echo "config entry '$config_key' must be one of string|array"
+					exit 1
+				end
+				for v in $value
+					set --append copy_opts "$key=$v"
+				end
+			end
+			if set --query "$flag_name"
+				for v in $$flag_name
+					set --append copy_opts "$key=$v"
+				end
+			end
+		end
+		# HANDLE NON-ACCumulative option:
+		set key (string match --regex './(.*)=[^+]' $k)[2]
+		and begin
+			set -l flag_name (string replace -- '-' '_' (string join -- '' '_flag_' "$key"))
+			set -l config_key (string replace -- '-' '_' "$key")
 			# set from flag:
 			if set --query "$flag_name"
-				# echo "set from option: $key=$$flag_name"
-				set --append copy_opts "$key=$$flag_name"
+				# echo "...set from flag: $flag_name"
+				for v in $$flag_name
+					set --append copy_opts "$key=$v"
+				end
 			# set from config:
 			else if contains "$config_key" (yq -re 'keys[]' "$config_file")
-				# echo "set from config: $key"
+				# echo ".. set from config"
 				if test (yq -re ".$config_key|type" "$config_file") = "string"
 					# echo "$key is a string"
 					set value (yq -re ".$config_key"'' "$config_file")
@@ -256,7 +284,9 @@ function cmd_run
 					echo "config entry '$config_key' must be one of string|array"
 					exit 1
 				end
-				set --append copy_opts "$key=$value"
+				for v in $value
+					set --append copy_opts "$key=$v"
+				end
 			end
 		end
 	end
@@ -285,12 +315,9 @@ function cmd_run
 		set --append cmd sudo -u "$user"
 	end
 	set --append cmd $copy_cmd
-	for flag in $copy_opts
+	for opt in $copy_opts
 		# echo "option: $flag"
-		set -l name_and_val (string split -- '=' $flag)
-		for x in (string split -- ' ' $name_and_val[2])
-			set --append cmd "--$name_and_val[1]=$x"
-		end
+		set --append cmd "--$opt"
 	end
 	set --append cmd $cmd_flags
 	for flag in $copy_opts

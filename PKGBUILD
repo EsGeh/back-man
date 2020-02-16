@@ -1,5 +1,5 @@
 pkgname=back-man
-pkgver=0.3
+pkgver=0.3.1
 pkgrel=1
 pkgdesc="Experimental utility for managing backup tasks based on config files"
 arch=("any")
