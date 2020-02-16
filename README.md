@@ -55,7 +55,7 @@ You are on your own.
 
 1. execute backup:
 
-		# fist simulate:
+		# first simulate:
 		$ back-man.fish run home --simulate
 
 		# if all is ok, execute it:
