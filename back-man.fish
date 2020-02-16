@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 
 
-set default_config_file 'config.conf.def'
+set default_config_file '__back_man.conf.def'
 set copy_cmd "ct-backup.fish"
 
 set config_dir
@@ -11,7 +11,7 @@ begin
 	if set --query XDG_CONFIG
 		set config_dir "$XDG_CONFIG"
 	end
-	set config_dir "$config_dir/backup-tools"
+	set config_dir "$config_dir/back-man"
 end
 
 set commands 'ls' 'add-cfg' 'run'
@@ -123,7 +123,9 @@ function cmd_add_cfg
 		echo "config file already exists '$config_file'" >&2
 		exit 1
 	end
-	echo > "$config_file"
+
+	mkdir --parents (dirname "$config_file")
+	touch "$config_file"
 
 	# echo "config_file: '$config_file'"
 	for line in (cat $default_config_file)

@@ -1,4 +1,4 @@
-# backup-manager
+# back-man
 
 Experimental command line utility for managing backup tasks based on config files.
 This script is implemented as a wrapper around the `ct-backup.fish` command from [copy-tools](https://github.com/EsGeh/copy-tools) and has a very similar command line interface.
@@ -27,29 +27,29 @@ You are on your own.
 
 1. list existing configs:
 
-		$ backup.fish ls
+		$ back-man.fish ls
 		> some_config
 		> some_other_config
 		> ...
 
 1. create a config:
 
-		$ backup.fish add-cfg home /home/me user@remote:/backups/home
-		> created '~/.config/backup-tools/home.conf'
+		$ back-man.fish add-cfg home /home/me user@remote:/backups/home
+		> created '~/.config/back-man/home.conf'
 
 		# edit command line arguments for ct-backup.fish:
-		$ vi '~/.config/backup-tools/home.conf'
+		$ vi '~/.config/back-man/home.conf'
 
 1. execute backup:
 
 		# fist simulate:
-		$ backup.fish run home --simulate
+		$ back-man.fish run home --simulate
 
 		# if all is ok, execute it:
-		$ backup.fish run home
+		$ back-man.fish run home
 
 ## Command line interface
 
 Run
 
-	$ backup.fish --help
+	$ back-man.fish --help
