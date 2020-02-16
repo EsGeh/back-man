@@ -1,6 +1,6 @@
 pkgname=back-man
-pkgver=0.1
-pkgrel=2
+pkgver=0.2
+pkgrel=1
 pkgdesc="Experimental utility for managing backup tasks based on config files"
 arch=("any")
 url="https://github.com/EsGeh/"

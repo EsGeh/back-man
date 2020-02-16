@@ -301,7 +301,7 @@ function cmd_run
 	set --append cmd "$src" "$dst"
 
 	echo "running: '$cmd'"
-	# $cmd
+	$cmd
 end
 
 switch $argv[1]
