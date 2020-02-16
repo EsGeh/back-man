@@ -72,7 +72,7 @@ function cmd_ls
 		print_help
 		exit
 	end
-	for config in $config_dir/*
+	for config in (find "$config_dir" -maxdepth 1 -type f)
 		echo (basename (string match -re '(.*).conf' "$config")[2])
 	end
 end
