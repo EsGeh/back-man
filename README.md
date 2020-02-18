@@ -1,7 +1,7 @@
 # back-man
 
 Experimental command line utility for managing backup tasks based on config files.
-This script is implemented as a wrapper around the `ct-backup.fish` command from [copy-tools](https://github.com/EsGeh/copy-tools) and has a very similar command line interface.
+This script is implemented as a wrapper around the commands from [copy-tools](https://github.com/EsGeh/copy-tools) and has a very similar command line interface.
 
 Work in progress. Use at your own risk.
 Feedback welcome.

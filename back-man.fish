@@ -2,7 +2,6 @@
 
 
 set default_config_file '__back_man.conf.def'
-set copy_cmd "ct-backup.fish"
 
 set config_dir "$HOME/.config"
 begin
@@ -141,12 +140,15 @@ function cmd_run
 		"d/config-dir=/directory where to save ssh connections. Default: '\$HOME/$config_dir'" \
 		"l/log-dir=/where to store log files. Default: '\$CONFIG_DIR/log'" \
 		"r/rsync-option=+/set rsync options"
+	set copy_cmd "backup"
 	set options_with_descr \
 		'h/help/print help' \
 		'u/user=/run as user' \
+		"c/cmd=/the command to run. One of copy|backup. default: $copy_cmd" \
 		$copy_opts_descr
 	set -g config_args \
 		'user' \
+		'cmd' \
 		'src' \
 		'dst'
 	set -g config_opts
@@ -167,7 +169,7 @@ function cmd_run
 		echo "OPTIONS:"
 		print_options_descr $copy_opts_descr $options_with_descr
 		echo "CONFIG entries:"
-		for f in $config_fields $config_opts "flags"
+		for f in $config_args $config_opts "flags"
 			echo "  $f"
 		end
 	end
@@ -223,6 +225,9 @@ function cmd_run
 	set src (yq -re '.src' "$config_file")
 	set dst (yq -re '.dst' "$config_file")
 	set user (yq -re '.user' "$config_file") >/dev/null; or set --erase user
+	if yq -re '.cmd' "$config_file" > /dev/null
+		set copy_cmd (yq -re '.cmd' "$config_file")
+	end
 	if test "$argv[1]" != ""
 		set src "$argv[1]"
 		set argv $argv[2..-1]
@@ -232,6 +237,15 @@ function cmd_run
 		set argv $argv[2..-1]
 	end
 	set --query _flag_user; and set user "$_flag_user"
+	set --query _flag_cmd; and set copy_cmd "$_flag_cmd"
+	if test "$copy_cmd" = "copy"
+		set copy_cmd "ct-copy.fish"
+	else if test "$copy_cmd" = "backup"
+		set copy_cmd "ct-backup.fish"
+	else
+		echo "CMD must be one of copy|backup"
+		exit 1
+	end
 
 	# set copy_opts from config or flags
 	for k in $copy_opts_descr
